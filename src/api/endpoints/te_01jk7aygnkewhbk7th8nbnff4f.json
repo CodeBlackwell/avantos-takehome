@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "te2-opt-region-na", "title": "North America" },
+    { "id": "te2-opt-region-eu", "title": "Europe" },
+    { "id": "te2-opt-region-apac", "title": "Asia-Pacific" }
+  ]
+}

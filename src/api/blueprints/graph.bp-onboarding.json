@@ -1,0 +1,440 @@
+{
+  "id": "bp-onboarding",
+  "tenant_id": "1",
+  "name": "New Client Onboarding (branching DAG)",
+  "description": "Onboard a new wealth-management client end to end: profile, KYC, risk, IPS, account opening, funding, and advisory agreement.",
+  "category": "Acquisition",
+  "nodes": [
+    {
+      "id": "form-onboarding-profile",
+      "type": "form",
+      "position": { "x": 0, "y": 200 },
+      "data": {
+        "id": "bp_c_onboarding_profile",
+        "component_key": "form-onboarding-profile",
+        "component_type": "form",
+        "component_id": "f_onboarding_profile",
+        "name": "Client Profile",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-kyc",
+      "type": "form",
+      "position": { "x": 240, "y": 80 },
+      "data": {
+        "id": "bp_c_onboarding_kyc",
+        "component_key": "form-onboarding-kyc",
+        "component_type": "form",
+        "component_id": "f_onboarding_kyc",
+        "name": "KYC / CIP Verification",
+        "prerequisites": ["form-onboarding-profile"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "subjectLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          },
+          "subjectDob": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "dob"
+          },
+          "subjectSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "ssn"
+          },
+          "subjectAddress": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "mailingAddress"
+          },
+          "subjectCitizenship": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "citizenship"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-risk",
+      "type": "form",
+      "position": { "x": 240, "y": 320 },
+      "data": {
+        "id": "bp_c_onboarding_risk",
+        "component_key": "form-onboarding-risk",
+        "component_type": "form",
+        "component_id": "f_onboarding_risk",
+        "name": "Risk Tolerance",
+        "prerequisites": ["form-onboarding-profile"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          },
+          "clientEmail": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-profile",
+            "optionId": "email"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-ips",
+      "type": "form",
+      "position": { "x": 480, "y": 320 },
+      "data": {
+        "id": "bp_c_onboarding_ips",
+        "component_key": "form-onboarding-ips",
+        "component_type": "form",
+        "component_id": "f_onboarding_ips",
+        "name": "Investment Policy Statement",
+        "prerequisites": ["form-onboarding-risk"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          },
+          "riskScore": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-risk",
+            "optionId": "riskScore"
+          },
+          "timeHorizon": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-risk",
+            "optionId": "timeHorizon"
+          },
+          "lossTolerance": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-risk",
+            "optionId": "lossTolerance"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-account",
+      "type": "form",
+      "position": { "x": 720, "y": 200 },
+      "data": {
+        "id": "bp_c_onboarding_account",
+        "component_key": "form-onboarding-account",
+        "component_type": "form",
+        "component_id": "f_onboarding_account",
+        "name": "Account Opening",
+        "prerequisites": ["form-onboarding-kyc", "form-onboarding-ips"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "accountHolderLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          },
+          "accountHolderTaxId": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "ssn"
+          },
+          "accountHolderEmail": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "email"
+          },
+          "accountHolderAddress": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "mailingAddress"
+          },
+          "allocationTarget": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-ips",
+            "optionId": "allocationTarget"
+          },
+          "investmentObjectives": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-ips",
+            "optionId": "objectives"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-funding",
+      "type": "form",
+      "position": { "x": 960, "y": 200 },
+      "data": {
+        "id": "bp_c_onboarding_funding",
+        "component_key": "form-onboarding-funding",
+        "component_type": "form",
+        "component_id": "f_onboarding_funding",
+        "name": "Funding Instructions",
+        "prerequisites": ["form-onboarding-account"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "destinationAccountNumber": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-account",
+            "optionId": "accountNumber"
+          },
+          "destinationCustodian": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-account",
+            "optionId": "custodian"
+          },
+          "accountHolderLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-onboarding-advisory",
+      "type": "form",
+      "position": { "x": 1200, "y": 200 },
+      "data": {
+        "id": "bp_c_onboarding_advisory",
+        "component_key": "form-onboarding-advisory",
+        "component_type": "form",
+        "component_id": "f_onboarding_advisory",
+        "name": "Advisory Agreement",
+        "prerequisites": ["form-onboarding-funding"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "legalName"
+          },
+          "clientEmail": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "email"
+          },
+          "clientAddress": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-profile",
+            "optionId": "mailingAddress"
+          },
+          "accountNumber": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-onboarding-account",
+            "optionId": "accountNumber"
+          },
+          "initialDeposit": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-funding",
+            "optionId": "initialDeposit"
+          },
+          "fundingMethod": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-onboarding-funding",
+            "optionId": "fundingMethod"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    { "source": "form-onboarding-profile", "target": "form-onboarding-kyc" },
+    { "source": "form-onboarding-profile", "target": "form-onboarding-risk" },
+    { "source": "form-onboarding-risk", "target": "form-onboarding-ips" },
+    { "source": "form-onboarding-kyc", "target": "form-onboarding-account" },
+    { "source": "form-onboarding-ips", "target": "form-onboarding-account" },
+    { "source": "form-onboarding-account", "target": "form-onboarding-funding" },
+    { "source": "form-onboarding-funding", "target": "form-onboarding-advisory" }
+  ],
+  "forms": [
+    {
+      "id": "f_onboarding_profile",
+      "name": "Client Profile",
+      "description": "Identity and contact details for the prospective client.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "legalName": { "avantos_type": "short-text", "type": "string", "title": "Legal Name" },
+          "dob": { "avantos_type": "short-text", "type": "string", "title": "Date of Birth", "format": "date" },
+          "ssn": { "avantos_type": "short-text", "type": "string", "title": "SSN / TIN" },
+          "email": { "avantos_type": "short-text", "type": "string", "title": "Email", "format": "email" },
+          "phone": { "avantos_type": "short-text", "type": "string", "title": "Phone", "format": "phone" },
+          "mailingAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Mailing Address" },
+          "citizenship": { "avantos_type": "short-text", "type": "string", "title": "Citizenship" },
+          "employer": { "avantos_type": "short-text", "type": "string", "title": "Employer" }
+        },
+        "required": ["legalName", "dob", "ssn", "email"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_kyc",
+      "name": "KYC / CIP Verification",
+      "description": "Customer identification program checks; identity fields carry over from Profile.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "subjectLegalName": { "avantos_type": "short-text", "type": "string", "title": "Subject Legal Name" },
+          "subjectDob": { "avantos_type": "short-text", "type": "string", "title": "Subject DOB", "format": "date" },
+          "subjectSsn": { "avantos_type": "short-text", "type": "string", "title": "Subject SSN / TIN" },
+          "subjectAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Subject Address" },
+          "subjectCitizenship": { "avantos_type": "short-text", "type": "string", "title": "Subject Citizenship" },
+          "idDocType": { "avantos_type": "short-text", "type": "string", "title": "ID Document Type" },
+          "idNumber": { "avantos_type": "short-text", "type": "string", "title": "ID Number" },
+          "ofacResult": { "avantos_type": "short-text", "type": "string", "title": "OFAC Result" },
+          "pepStatus": { "avantos_type": "short-text", "type": "string", "title": "Politically Exposed Person" },
+          "sourceOfFunds": { "avantos_type": "multi-line-text", "type": "string", "title": "Source of Funds" }
+        },
+        "required": ["subjectLegalName", "subjectSsn", "idDocType", "idNumber", "ofacResult"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_risk",
+      "name": "Risk Tolerance",
+      "description": "Risk profile questionnaire; client identity carries over from Profile.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientEmail": { "avantos_type": "short-text", "type": "string", "title": "Client Email", "format": "email" },
+          "timeHorizon": { "avantos_type": "short-text", "type": "string", "title": "Time Horizon" },
+          "lossTolerance": { "avantos_type": "short-text", "type": "string", "title": "Loss Tolerance" },
+          "investmentExperience": { "avantos_type": "short-text", "type": "string", "title": "Investment Experience" },
+          "riskScore": { "avantos_type": "short-text", "type": "string", "title": "Risk Score" }
+        },
+        "required": ["clientLegalName", "timeHorizon", "lossTolerance", "riskScore"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_ips",
+      "name": "Investment Policy Statement",
+      "description": "Objectives, allocation target, restrictions, benchmark — risk inputs carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "riskScore": { "avantos_type": "short-text", "type": "string", "title": "Risk Score" },
+          "timeHorizon": { "avantos_type": "short-text", "type": "string", "title": "Time Horizon" },
+          "lossTolerance": { "avantos_type": "short-text", "type": "string", "title": "Loss Tolerance" },
+          "objectives": { "avantos_type": "multi-line-text", "type": "string", "title": "Objectives" },
+          "allocationTarget": { "avantos_type": "short-text", "type": "string", "title": "Allocation Target" },
+          "restrictions": { "avantos_type": "multi-line-text", "type": "string", "title": "Restrictions" },
+          "benchmark": { "avantos_type": "short-text", "type": "string", "title": "Benchmark" }
+        },
+        "required": ["clientLegalName", "riskScore", "objectives", "allocationTarget"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_account",
+      "name": "Account Opening",
+      "description": "Custodian and registration details; identity and policy carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "accountHolderLegalName": { "avantos_type": "short-text", "type": "string", "title": "Account Holder Legal Name" },
+          "accountHolderTaxId": { "avantos_type": "short-text", "type": "string", "title": "Account Holder Tax ID" },
+          "accountHolderEmail": { "avantos_type": "short-text", "type": "string", "title": "Account Holder Email", "format": "email" },
+          "accountHolderAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Account Holder Address" },
+          "allocationTarget": { "avantos_type": "short-text", "type": "string", "title": "Allocation Target" },
+          "investmentObjectives": { "avantos_type": "multi-line-text", "type": "string", "title": "Investment Objectives" },
+          "accountType": { "avantos_type": "short-text", "type": "string", "title": "Account Type" },
+          "custodian": { "avantos_type": "short-text", "type": "string", "title": "Custodian" },
+          "registrationType": { "avantos_type": "short-text", "type": "string", "title": "Registration Type" },
+          "accountNumber": { "avantos_type": "short-text", "type": "string", "title": "Account Number" }
+        },
+        "required": ["accountHolderLegalName", "accountType", "custodian", "registrationType"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_funding",
+      "name": "Funding Instructions",
+      "description": "Initial funding source and amount; destination account inherited.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "accountHolderLegalName": { "avantos_type": "short-text", "type": "string", "title": "Account Holder" },
+          "destinationAccountNumber": { "avantos_type": "short-text", "type": "string", "title": "Destination Account #" },
+          "destinationCustodian": { "avantos_type": "short-text", "type": "string", "title": "Destination Custodian" },
+          "fundingMethod": { "avantos_type": "short-text", "type": "string", "title": "Funding Method" },
+          "sourceAccount": { "avantos_type": "short-text", "type": "string", "title": "Source Account" },
+          "initialDeposit": { "avantos_type": "short-text", "type": "string", "title": "Initial Deposit", "format": "currency" },
+          "fundingDate": { "avantos_type": "short-text", "type": "string", "title": "Funding Date", "format": "date" }
+        },
+        "required": ["fundingMethod", "initialDeposit"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_onboarding_advisory",
+      "name": "Advisory Agreement",
+      "description": "Fee schedule and signature; client identity, account, and funding all carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientEmail": { "avantos_type": "short-text", "type": "string", "title": "Client Email", "format": "email" },
+          "clientAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Client Address" },
+          "accountNumber": { "avantos_type": "short-text", "type": "string", "title": "Account Number" },
+          "initialDeposit": { "avantos_type": "short-text", "type": "string", "title": "Initial Deposit", "format": "currency" },
+          "fundingMethod": { "avantos_type": "short-text", "type": "string", "title": "Funding Method" },
+          "feeSchedule": { "avantos_type": "short-text", "type": "string", "title": "Fee Schedule" },
+          "signatureDate": { "avantos_type": "short-text", "type": "string", "title": "Signature Date", "format": "date" },
+          "agreementAccepted": { "avantos_type": "short-text", "type": "string", "title": "Agreement Accepted" }
+        },
+        "required": ["clientLegalName", "feeSchedule", "signatureDate"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    }
+  ],
+  "branches": [],
+  "triggers": []
+}

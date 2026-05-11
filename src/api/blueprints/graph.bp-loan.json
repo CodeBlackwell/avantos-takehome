@@ -1,0 +1,1487 @@
+{
+  "id": "bp-loan",
+  "tenant_id": "1",
+  "name": "Commercial Loan Origination (21-node stress test)",
+  "description": "Underwrite, approve, and book a commercial loan: borrower and business intake, KYC, financial diligence, collateral, risk rating, credit memo, approval, closing, and funding. Identity, entity, and computed values cascade through every downstream form.",
+  "category": "Credit",
+  "nodes": [
+    {
+      "id": "form-loan-borrower",
+      "type": "form",
+      "position": { "x": 0, "y": 80 },
+      "data": {
+        "id": "bp_c_loan_borrower",
+        "component_key": "form-loan-borrower",
+        "component_type": "form",
+        "component_id": "f_loan_borrower",
+        "name": "Borrower Profile",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-business",
+      "type": "form",
+      "position": { "x": 0, "y": 320 },
+      "data": {
+        "id": "bp_c_loan_business",
+        "component_key": "form-loan-business",
+        "component_type": "form",
+        "component_id": "f_loan_business",
+        "name": "Business Profile",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-pfs",
+      "type": "form",
+      "position": { "x": 240, "y": 0 },
+      "data": {
+        "id": "bp_c_loan_pfs",
+        "component_key": "form-loan-pfs",
+        "component_type": "form",
+        "component_id": "f_loan_pfs",
+        "name": "Personal Financial Statement",
+        "prerequisites": ["form-loan-borrower"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "guarantorLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "legalName"
+          },
+          "guarantorSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "ssn"
+          },
+          "guarantorDob": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "dob"
+          },
+          "guarantorAddress": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "homeAddress"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-tax-personal",
+      "type": "form",
+      "position": { "x": 240, "y": 100 },
+      "data": {
+        "id": "bp_c_loan_tax_personal",
+        "component_key": "form-loan-tax-personal",
+        "component_type": "form",
+        "component_id": "f_loan_tax_personal",
+        "name": "Tax Returns — Personal",
+        "prerequisites": ["form-loan-borrower"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "taxpayerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "legalName"
+          },
+          "taxpayerSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "ssn"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-tax-business",
+      "type": "form",
+      "position": { "x": 240, "y": 220 },
+      "data": {
+        "id": "bp_c_loan_tax_business",
+        "component_key": "form-loan-tax-business",
+        "component_type": "form",
+        "component_id": "f_loan_tax_business",
+        "name": "Tax Returns — Business",
+        "prerequisites": ["form-loan-business"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "legalEntityName"
+          },
+          "entityEin": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "ein"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-financials",
+      "type": "form",
+      "position": { "x": 240, "y": 320 },
+      "data": {
+        "id": "bp_c_loan_financials",
+        "component_key": "form-loan-financials",
+        "component_type": "form",
+        "component_id": "f_loan_financials",
+        "name": "Business Financials",
+        "prerequisites": ["form-loan-business"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "legalEntityName"
+          },
+          "entityEin": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "ein"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-bank-stmts",
+      "type": "form",
+      "position": { "x": 240, "y": 420 },
+      "data": {
+        "id": "bp_c_loan_bank_stmts",
+        "component_key": "form-loan-bank-stmts",
+        "component_type": "form",
+        "component_id": "f_loan_bank_stmts",
+        "name": "Bank Statements",
+        "prerequisites": ["form-loan-business"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "legalEntityName"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-kyc",
+      "type": "form",
+      "position": { "x": 240, "y": 520 },
+      "data": {
+        "id": "bp_c_loan_kyc",
+        "component_key": "form-loan-kyc",
+        "component_type": "form",
+        "component_id": "f_loan_kyc",
+        "name": "KYC / OFAC Check",
+        "prerequisites": ["form-loan-borrower", "form-loan-business"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "legalName"
+          },
+          "borrowerSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "ssn"
+          },
+          "borrowerDob": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "dob"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "legalEntityName"
+          },
+          "entityEin": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "ein"
+          },
+          "entityType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "entityType"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-collateral",
+      "type": "form",
+      "position": { "x": 240, "y": 640 },
+      "data": {
+        "id": "bp_c_loan_collateral",
+        "component_key": "form-loan-collateral",
+        "component_type": "form",
+        "component_id": "f_loan_collateral",
+        "name": "Collateral Description",
+        "prerequisites": ["form-loan-business"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "pledgorEntity": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-business",
+            "optionId": "legalEntityName"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-credit",
+      "type": "form",
+      "position": { "x": 480, "y": 60 },
+      "data": {
+        "id": "bp_c_loan_credit",
+        "component_key": "form-loan-credit",
+        "component_type": "form",
+        "component_id": "f_loan_credit",
+        "name": "Credit Bureau Report",
+        "prerequisites": ["form-loan-borrower", "form-loan-kyc"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "subjectLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "legalName"
+          },
+          "subjectSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "ssn"
+          },
+          "subjectDob": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-borrower",
+            "optionId": "dob"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-kyc",
+            "optionId": "entityLegalName"
+          },
+          "entityEin": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-kyc",
+            "optionId": "entityEin"
+          },
+          "ofacResult": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-kyc",
+            "optionId": "ofacResult"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-cashflow",
+      "type": "form",
+      "position": { "x": 480, "y": 320 },
+      "data": {
+        "id": "bp_c_loan_cashflow",
+        "component_key": "form-loan-cashflow",
+        "component_type": "form",
+        "component_id": "f_loan_cashflow",
+        "name": "Cash Flow Analysis",
+        "prerequisites": [
+          "form-loan-tax-business",
+          "form-loan-financials",
+          "form-loan-bank-stmts"
+        ],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-financials",
+            "optionId": "entityLegalName"
+          },
+          "ytdRevenueInput": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-financials",
+            "optionId": "ytdRevenue"
+          },
+          "ytdEbitdaInput": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-financials",
+            "optionId": "ytdEbitda"
+          },
+          "grossRevenueYear3": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-tax-business",
+            "optionId": "grossRevenueYear3"
+          },
+          "netIncomeYear3": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-tax-business",
+            "optionId": "netIncomeYear3"
+          },
+          "avgMonthlyDeposits": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-bank-stmts",
+            "optionId": "avgMonthlyDeposits"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-appraisal",
+      "type": "form",
+      "position": { "x": 480, "y": 600 },
+      "data": {
+        "id": "bp_c_loan_appraisal",
+        "component_key": "form-loan-appraisal",
+        "component_type": "form",
+        "component_id": "f_loan_appraisal",
+        "name": "Collateral Appraisal",
+        "prerequisites": ["form-loan-collateral"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "collateralType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "collateralType"
+          },
+          "collateralDescription": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "description"
+          },
+          "estimatedValue": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "estimatedValue"
+          },
+          "ownerOfRecord": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "owner"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-ucc",
+      "type": "form",
+      "position": { "x": 480, "y": 700 },
+      "data": {
+        "id": "bp_c_loan_ucc",
+        "component_key": "form-loan-ucc",
+        "component_type": "form",
+        "component_id": "f_loan_ucc",
+        "name": "UCC Lien Search",
+        "prerequisites": ["form-loan-collateral", "form-loan-kyc"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-kyc",
+            "optionId": "entityLegalName"
+          },
+          "entityEin": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-kyc",
+            "optionId": "entityEin"
+          },
+          "collateralType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "collateralType"
+          },
+          "ownerOfRecord": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "owner"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-insurance",
+      "type": "form",
+      "position": { "x": 480, "y": 800 },
+      "data": {
+        "id": "bp_c_loan_insurance",
+        "component_key": "form-loan-insurance",
+        "component_type": "form",
+        "component_id": "f_loan_insurance",
+        "name": "Insurance Verification",
+        "prerequisites": ["form-loan-collateral"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "collateralType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "collateralType"
+          },
+          "collateralDescription": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "description"
+          },
+          "coverageAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-collateral",
+            "optionId": "estimatedValue"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-dscr",
+      "type": "form",
+      "position": { "x": 720, "y": 320 },
+      "data": {
+        "id": "bp_c_loan_dscr",
+        "component_key": "form-loan-dscr",
+        "component_type": "form",
+        "component_id": "f_loan_dscr",
+        "name": "Debt Service Coverage",
+        "prerequisites": ["form-loan-cashflow", "form-loan-pfs"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-cashflow",
+            "optionId": "entityLegalName"
+          },
+          "normalizedEbitda": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-cashflow",
+            "optionId": "normalizedEbitda"
+          },
+          "operatingCashFlow": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-cashflow",
+            "optionId": "operatingCashFlow"
+          },
+          "guarantorAnnualIncome": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-pfs",
+            "optionId": "annualIncome"
+          },
+          "guarantorTotalLiabilities": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-pfs",
+            "optionId": "totalLiabilities"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-risk",
+      "type": "form",
+      "position": { "x": 960, "y": 240 },
+      "data": {
+        "id": "bp_c_loan_risk",
+        "component_key": "form-loan-risk",
+        "component_type": "form",
+        "component_id": "f_loan_risk",
+        "name": "Risk Rating",
+        "prerequisites": [
+          "form-loan-credit",
+          "form-loan-dscr",
+          "form-loan-tax-personal"
+        ],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-loan-borrower",
+            "optionId": "legalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-dscr",
+            "optionId": "entityLegalName"
+          },
+          "ficoScore": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-credit",
+            "optionId": "ficoScore"
+          },
+          "businessCreditScore": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-credit",
+            "optionId": "businessCreditScore"
+          },
+          "globalDscr": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-dscr",
+            "optionId": "globalDscr"
+          },
+          "agiYear3": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-tax-personal",
+            "optionId": "agiYear3"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-terms",
+      "type": "form",
+      "position": { "x": 1200, "y": 320 },
+      "data": {
+        "id": "bp_c_loan_terms",
+        "component_key": "form-loan-terms",
+        "component_type": "form",
+        "component_id": "f_loan_terms",
+        "name": "Loan Terms",
+        "prerequisites": ["form-loan-risk", "form-loan-appraisal"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-risk",
+            "optionId": "borrowerLegalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-risk",
+            "optionId": "entityLegalName"
+          },
+          "riskGrade": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-risk",
+            "optionId": "riskGrade"
+          },
+          "pdEstimate": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-risk",
+            "optionId": "pdEstimate"
+          },
+          "appraisedValue": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-appraisal",
+            "optionId": "appraisedValue"
+          },
+          "collateralType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-appraisal",
+            "optionId": "collateralType"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-memo",
+      "type": "form",
+      "position": { "x": 1440, "y": 480 },
+      "data": {
+        "id": "bp_c_loan_memo",
+        "component_key": "form-loan-memo",
+        "component_type": "form",
+        "component_id": "f_loan_memo",
+        "name": "Credit Memo",
+        "prerequisites": [
+          "form-loan-terms",
+          "form-loan-ucc",
+          "form-loan-insurance"
+        ],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "borrowerLegalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "entityLegalName"
+          },
+          "loanAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "loanAmount"
+          },
+          "termMonths": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "termMonths"
+          },
+          "interestRate": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "interestRate"
+          },
+          "riskGrade": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-terms",
+            "optionId": "riskGrade"
+          },
+          "lienPosition": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-ucc",
+            "optionId": "lienPosition"
+          },
+          "coverageAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-insurance",
+            "optionId": "coverageAmount"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-approval",
+      "type": "form",
+      "position": { "x": 1680, "y": 480 },
+      "data": {
+        "id": "bp_c_loan_approval",
+        "component_key": "form-loan-approval",
+        "component_type": "form",
+        "component_id": "f_loan_approval",
+        "name": "Approval Decision",
+        "prerequisites": ["form-loan-memo"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-memo",
+            "optionId": "borrowerLegalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-memo",
+            "optionId": "entityLegalName"
+          },
+          "loanAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-memo",
+            "optionId": "loanAmount"
+          },
+          "recommendation": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-memo",
+            "optionId": "recommendation"
+          },
+          "summary": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-memo",
+            "optionId": "summary"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-closing",
+      "type": "form",
+      "position": { "x": 1920, "y": 480 },
+      "data": {
+        "id": "bp_c_loan_closing",
+        "component_key": "form-loan-closing",
+        "component_type": "form",
+        "component_id": "f_loan_closing",
+        "name": "Closing Package",
+        "prerequisites": ["form-loan-approval"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "borrowerLegalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "entityLegalName"
+          },
+          "noteAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "loanAmount"
+          },
+          "decision": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "decision"
+          },
+          "decisionDate": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "decisionDate"
+          },
+          "approvalConditions": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-approval",
+            "optionId": "conditions"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-loan-funding",
+      "type": "form",
+      "position": { "x": 2160, "y": 480 },
+      "data": {
+        "id": "bp_c_loan_funding",
+        "component_key": "form-loan-funding",
+        "component_type": "form",
+        "component_id": "f_loan_funding",
+        "name": "Funding & Booking",
+        "prerequisites": ["form-loan-closing"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "borrowerLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-closing",
+            "optionId": "borrowerLegalName"
+          },
+          "entityLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-closing",
+            "optionId": "entityLegalName"
+          },
+          "noteAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-closing",
+            "optionId": "noteAmount"
+          },
+          "closingDate": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-loan-closing",
+            "optionId": "closingDate"
+          },
+          "bookedBy": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-loan-approval",
+            "optionId": "approver"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    { "source": "form-loan-borrower", "target": "form-loan-pfs" },
+    { "source": "form-loan-borrower", "target": "form-loan-tax-personal" },
+    { "source": "form-loan-borrower", "target": "form-loan-kyc" },
+    { "source": "form-loan-business", "target": "form-loan-tax-business" },
+    { "source": "form-loan-business", "target": "form-loan-financials" },
+    { "source": "form-loan-business", "target": "form-loan-bank-stmts" },
+    { "source": "form-loan-business", "target": "form-loan-kyc" },
+    { "source": "form-loan-business", "target": "form-loan-collateral" },
+    { "source": "form-loan-borrower", "target": "form-loan-credit" },
+    { "source": "form-loan-kyc", "target": "form-loan-credit" },
+    { "source": "form-loan-collateral", "target": "form-loan-appraisal" },
+    { "source": "form-loan-collateral", "target": "form-loan-ucc" },
+    { "source": "form-loan-kyc", "target": "form-loan-ucc" },
+    { "source": "form-loan-collateral", "target": "form-loan-insurance" },
+    { "source": "form-loan-tax-business", "target": "form-loan-cashflow" },
+    { "source": "form-loan-financials", "target": "form-loan-cashflow" },
+    { "source": "form-loan-bank-stmts", "target": "form-loan-cashflow" },
+    { "source": "form-loan-cashflow", "target": "form-loan-dscr" },
+    { "source": "form-loan-pfs", "target": "form-loan-dscr" },
+    { "source": "form-loan-credit", "target": "form-loan-risk" },
+    { "source": "form-loan-dscr", "target": "form-loan-risk" },
+    { "source": "form-loan-tax-personal", "target": "form-loan-risk" },
+    { "source": "form-loan-risk", "target": "form-loan-terms" },
+    { "source": "form-loan-appraisal", "target": "form-loan-terms" },
+    { "source": "form-loan-terms", "target": "form-loan-memo" },
+    { "source": "form-loan-ucc", "target": "form-loan-memo" },
+    { "source": "form-loan-insurance", "target": "form-loan-memo" },
+    { "source": "form-loan-memo", "target": "form-loan-approval" },
+    { "source": "form-loan-approval", "target": "form-loan-closing" },
+    { "source": "form-loan-closing", "target": "form-loan-funding" }
+  ],
+  "forms": [
+    {
+      "id": "f_loan_borrower",
+      "name": "Borrower Profile",
+      "description": "Principal borrower / guarantor identity and contact.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "legalName": { "avantos_type": "short-text", "type": "string", "title": "Legal Name" },
+          "ssn": { "avantos_type": "short-text", "type": "string", "title": "SSN", "format": "ssn" },
+          "dob": { "avantos_type": "short-text", "type": "string", "title": "Date of Birth", "format": "date" },
+          "email": { "avantos_type": "short-text", "type": "string", "title": "Email", "format": "email" },
+          "phone": { "avantos_type": "short-text", "type": "string", "title": "Phone", "format": "phone" },
+          "homeAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Home Address" },
+          "ownershipPct": { "avantos_type": "short-text", "type": "string", "title": "Ownership %", "format": "percent" }
+        },
+        "required": ["legalName", "ssn", "dob"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_business",
+      "name": "Business Profile",
+      "description": "Operating entity, EIN, structure, industry.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "legalEntityName": { "avantos_type": "short-text", "type": "string", "title": "Legal Entity Name" },
+          "ein": { "avantos_type": "short-text", "type": "string", "title": "EIN", "format": "ein" },
+          "entityType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Entity Type",
+            "enum": ["LLC", "S-Corp", "C-Corp", "Sole Proprietorship", "Limited Partnership", "General Partnership"]
+          },
+          "naicsCode": { "avantos_type": "short-text", "type": "string", "title": "NAICS Code", "format": "naics" },
+          "yearsInBusiness": { "avantos_type": "short-text", "type": "string", "title": "Years in Business", "format": "integer" },
+          "businessAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Business Address" },
+          "businessPhone": { "avantos_type": "short-text", "type": "string", "title": "Business Phone", "format": "phone" },
+          "businessEmail": { "avantos_type": "short-text", "type": "string", "title": "Business Email", "format": "email" }
+        },
+        "required": ["legalEntityName", "ein", "entityType"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_pfs",
+      "name": "Personal Financial Statement",
+      "description": "Guarantor assets, liabilities, contingent obligations; identity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "guarantorLegalName": { "avantos_type": "short-text", "type": "string", "title": "Guarantor Legal Name" },
+          "guarantorSsn": { "avantos_type": "short-text", "type": "string", "title": "Guarantor SSN" },
+          "guarantorDob": { "avantos_type": "short-text", "type": "string", "title": "Guarantor DOB", "format": "date" },
+          "guarantorAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Guarantor Address" },
+          "totalAssets": { "avantos_type": "short-text", "type": "string", "title": "Total Assets", "format": "currency" },
+          "totalLiabilities": { "avantos_type": "short-text", "type": "string", "title": "Total Liabilities", "format": "currency" },
+          "liquidAssets": { "avantos_type": "short-text", "type": "string", "title": "Liquid Assets", "format": "currency" },
+          "contingentLiabilities": { "avantos_type": "short-text", "type": "string", "title": "Contingent Liabilities", "format": "currency" },
+          "annualIncome": { "avantos_type": "short-text", "type": "string", "title": "Annual Income", "format": "currency" }
+        },
+        "required": ["guarantorLegalName", "totalAssets", "totalLiabilities", "annualIncome"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_tax_personal",
+      "name": "Tax Returns — Personal",
+      "description": "Three-year personal 1040 summary; identity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "taxpayerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Taxpayer Legal Name" },
+          "taxpayerSsn": { "avantos_type": "short-text", "type": "string", "title": "Taxpayer SSN" },
+          "agiYear1": { "avantos_type": "short-text", "type": "string", "title": "AGI — Year 1", "format": "currency" },
+          "agiYear2": { "avantos_type": "short-text", "type": "string", "title": "AGI — Year 2", "format": "currency" },
+          "agiYear3": { "avantos_type": "short-text", "type": "string", "title": "AGI — Year 3", "format": "currency" },
+          "scheduleEIncome": { "avantos_type": "short-text", "type": "string", "title": "Schedule E Income", "format": "currency" }
+        },
+        "required": ["taxpayerLegalName", "agiYear1", "agiYear2", "agiYear3"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_tax_business",
+      "name": "Tax Returns — Business",
+      "description": "Three-year business return summary; entity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "entityEin": { "avantos_type": "short-text", "type": "string", "title": "Entity EIN" },
+          "grossRevenueYear1": { "avantos_type": "short-text", "type": "string", "title": "Gross Revenue — Year 1", "format": "currency" },
+          "grossRevenueYear2": { "avantos_type": "short-text", "type": "string", "title": "Gross Revenue — Year 2", "format": "currency" },
+          "grossRevenueYear3": { "avantos_type": "short-text", "type": "string", "title": "Gross Revenue — Year 3", "format": "currency" },
+          "netIncomeYear3": { "avantos_type": "short-text", "type": "string", "title": "Net Income — Year 3", "format": "currency" }
+        },
+        "required": ["entityLegalName", "grossRevenueYear1", "grossRevenueYear2", "grossRevenueYear3"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_financials",
+      "name": "Business Financials",
+      "description": "Year-to-date P&L and balance sheet; entity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "entityEin": { "avantos_type": "short-text", "type": "string", "title": "Entity EIN" },
+          "ytdRevenue": { "avantos_type": "short-text", "type": "string", "title": "YTD Revenue", "format": "currency" },
+          "ytdEbitda": { "avantos_type": "short-text", "type": "string", "title": "YTD EBITDA", "format": "currency" },
+          "totalAssets": { "avantos_type": "short-text", "type": "string", "title": "Total Assets", "format": "currency" },
+          "totalDebt": { "avantos_type": "short-text", "type": "string", "title": "Total Debt", "format": "currency" },
+          "workingCapital": { "avantos_type": "short-text", "type": "string", "title": "Working Capital", "format": "currency" }
+        },
+        "required": ["entityLegalName", "ytdRevenue", "ytdEbitda", "totalAssets"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_bank_stmts",
+      "name": "Bank Statements",
+      "description": "Trailing twelve-month operating account activity; entity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "primaryBank": { "avantos_type": "short-text", "type": "string", "title": "Primary Bank" },
+          "avgMonthlyDeposits": { "avantos_type": "short-text", "type": "string", "title": "Avg Monthly Deposits", "format": "currency" },
+          "avgMonthlyBalance": { "avantos_type": "short-text", "type": "string", "title": "Avg Monthly Balance", "format": "currency" },
+          "nsfCount12mo": { "avantos_type": "short-text", "type": "string", "title": "NSF Count (12 mo)", "format": "integer" }
+        },
+        "required": ["entityLegalName", "primaryBank", "avgMonthlyDeposits", "avgMonthlyBalance"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_kyc",
+      "name": "KYC / OFAC Check",
+      "description": "Identity verification and sanctions screening; borrower and entity carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "borrowerSsn": { "avantos_type": "short-text", "type": "string", "title": "Borrower SSN" },
+          "borrowerDob": { "avantos_type": "short-text", "type": "string", "title": "Borrower DOB", "format": "date" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "entityEin": { "avantos_type": "short-text", "type": "string", "title": "Entity EIN" },
+          "entityType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Entity Type",
+            "enum": ["LLC", "S-Corp", "C-Corp", "Sole Proprietorship", "Limited Partnership", "General Partnership"]
+          },
+          "borrowerIdVerified": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Borrower ID Verified",
+            "enum": ["Yes", "No", "Pending"]
+          },
+          "entityVerified": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Entity Verified",
+            "enum": ["Yes", "No", "Pending"]
+          },
+          "ofacResult": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "OFAC Result",
+            "enum": ["Clear", "Match", "Possible Match", "Pending"]
+          },
+          "pepStatus": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "PEP Status",
+            "enum": ["No", "Yes — Domestic", "Yes — Foreign", "Yes — Family/Associate"]
+          },
+          "beneficialOwners": { "avantos_type": "multi-line-text", "type": "string", "title": "Beneficial Owners ≥25%" }
+        },
+        "required": ["borrowerLegalName", "entityLegalName", "borrowerIdVerified", "entityVerified", "ofacResult"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_credit",
+      "name": "Credit Bureau Report",
+      "description": "Consumer and commercial credit pull; subject and entity carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "subjectLegalName": { "avantos_type": "short-text", "type": "string", "title": "Subject Legal Name" },
+          "subjectSsn": { "avantos_type": "short-text", "type": "string", "title": "Subject SSN" },
+          "subjectDob": { "avantos_type": "short-text", "type": "string", "title": "Subject DOB", "format": "date" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "entityEin": { "avantos_type": "short-text", "type": "string", "title": "Entity EIN" },
+          "ofacResult": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "OFAC Result",
+            "enum": ["Clear", "Match", "Possible Match", "Pending"]
+          },
+          "ficoScore": { "avantos_type": "short-text", "type": "string", "title": "FICO Score", "format": "integer" },
+          "businessCreditScore": { "avantos_type": "short-text", "type": "string", "title": "Business Credit Score", "format": "integer" },
+          "delinquencies24mo": { "avantos_type": "short-text", "type": "string", "title": "Delinquencies (24 mo)", "format": "integer" },
+          "publicRecords": { "avantos_type": "short-text", "type": "string", "title": "Public Records", "format": "integer" }
+        },
+        "required": ["subjectLegalName", "ficoScore", "businessCreditScore"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_collateral",
+      "name": "Collateral Description",
+      "description": "Asset class, location, and ownership of pledged collateral.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "pledgorEntity": { "avantos_type": "short-text", "type": "string", "title": "Pledgor Entity" },
+          "collateralType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Collateral Type",
+            "enum": ["Commercial Real Estate", "Equipment", "Accounts Receivable", "Inventory", "Vehicles", "Securities", "Blanket Lien"]
+          },
+          "description": { "avantos_type": "multi-line-text", "type": "string", "title": "Description" },
+          "estimatedValue": { "avantos_type": "short-text", "type": "string", "title": "Estimated Value", "format": "currency" },
+          "owner": { "avantos_type": "short-text", "type": "string", "title": "Owner of Record" }
+        },
+        "required": ["pledgorEntity", "collateralType", "estimatedValue", "owner"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_appraisal",
+      "name": "Collateral Appraisal",
+      "description": "Independent valuation of pledged collateral; collateral details carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "collateralType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Collateral Type",
+            "enum": ["Commercial Real Estate", "Equipment", "Accounts Receivable", "Inventory", "Vehicles", "Securities", "Blanket Lien"]
+          },
+          "collateralDescription": { "avantos_type": "multi-line-text", "type": "string", "title": "Collateral Description" },
+          "estimatedValue": { "avantos_type": "short-text", "type": "string", "title": "Estimated Value", "format": "currency" },
+          "ownerOfRecord": { "avantos_type": "short-text", "type": "string", "title": "Owner of Record" },
+          "appraiser": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Appraiser",
+            "enum": null
+          },
+          "appraisedValue": { "avantos_type": "short-text", "type": "string", "title": "Appraised Value", "format": "currency" },
+          "appraisalDate": { "avantos_type": "short-text", "type": "string", "title": "Appraisal Date", "format": "date" },
+          "method": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Valuation Method",
+            "enum": ["Sales Comparison", "Income Approach", "Cost Approach", "Orderly Liquidation Value", "Forced Liquidation Value"]
+          }
+        },
+        "required": ["collateralType", "appraiser", "appraisedValue", "appraisalDate"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_ucc",
+      "name": "UCC Lien Search",
+      "description": "Existing UCC filings and prior lien position; entity and collateral carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "entityEin": { "avantos_type": "short-text", "type": "string", "title": "Entity EIN" },
+          "collateralType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Collateral Type",
+            "enum": ["Commercial Real Estate", "Equipment", "Accounts Receivable", "Inventory", "Vehicles", "Securities", "Blanket Lien"]
+          },
+          "ownerOfRecord": { "avantos_type": "short-text", "type": "string", "title": "Owner of Record" },
+          "filingState": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Filing State",
+            "enum": null
+          },
+          "existingFilings": { "avantos_type": "short-text", "type": "string", "title": "Existing Filings", "format": "integer" },
+          "priorLienholder": { "avantos_type": "short-text", "type": "string", "title": "Prior Lienholder" },
+          "lienPosition": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Lien Position",
+            "enum": ["1st", "2nd", "3rd", "Subordinate", "None"]
+          }
+        },
+        "required": ["entityLegalName", "filingState", "existingFilings", "lienPosition"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_insurance",
+      "name": "Insurance Verification",
+      "description": "Hazard, liability, and lender-loss-payee endorsements; collateral details carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "collateralType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Collateral Type",
+            "enum": ["Commercial Real Estate", "Equipment", "Accounts Receivable", "Inventory", "Vehicles", "Securities", "Blanket Lien"]
+          },
+          "collateralDescription": { "avantos_type": "multi-line-text", "type": "string", "title": "Collateral Description" },
+          "carrier": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Carrier",
+            "enum": null
+          },
+          "policyNumber": { "avantos_type": "short-text", "type": "string", "title": "Policy Number", "format": "identifier" },
+          "coverageAmount": { "avantos_type": "short-text", "type": "string", "title": "Coverage Amount", "format": "currency" },
+          "lossPayeeAdded": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Loss Payee Added",
+            "enum": ["Yes", "No", "Pending"]
+          },
+          "expirationDate": { "avantos_type": "short-text", "type": "string", "title": "Expiration Date", "format": "date" }
+        },
+        "required": ["carrier", "policyNumber", "coverageAmount"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_cashflow",
+      "name": "Cash Flow Analysis",
+      "description": "Normalized operating cash flow from financials, tax returns, and bank activity.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "ytdRevenueInput": { "avantos_type": "short-text", "type": "string", "title": "YTD Revenue (input)", "format": "currency" },
+          "ytdEbitdaInput": { "avantos_type": "short-text", "type": "string", "title": "YTD EBITDA (input)", "format": "currency" },
+          "grossRevenueYear3": { "avantos_type": "short-text", "type": "string", "title": "Gross Revenue — Year 3", "format": "currency" },
+          "netIncomeYear3": { "avantos_type": "short-text", "type": "string", "title": "Net Income — Year 3", "format": "currency" },
+          "avgMonthlyDeposits": { "avantos_type": "short-text", "type": "string", "title": "Avg Monthly Deposits", "format": "currency" },
+          "normalizedEbitda": { "avantos_type": "short-text", "type": "string", "title": "Normalized EBITDA", "format": "currency" },
+          "operatingCashFlow": { "avantos_type": "short-text", "type": "string", "title": "Operating Cash Flow", "format": "currency" },
+          "addBacks": { "avantos_type": "multi-line-text", "type": "string", "title": "Add-Backs" },
+          "freeCashFlow": { "avantos_type": "short-text", "type": "string", "title": "Free Cash Flow", "format": "currency" }
+        },
+        "required": ["entityLegalName", "normalizedEbitda", "operatingCashFlow"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_dscr",
+      "name": "Debt Service Coverage",
+      "description": "Coverage ratio computed against existing and proposed debt; cash flow and PFS values carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "normalizedEbitda": { "avantos_type": "short-text", "type": "string", "title": "Normalized EBITDA", "format": "currency" },
+          "operatingCashFlow": { "avantos_type": "short-text", "type": "string", "title": "Operating Cash Flow", "format": "currency" },
+          "guarantorAnnualIncome": { "avantos_type": "short-text", "type": "string", "title": "Guarantor Annual Income", "format": "currency" },
+          "guarantorTotalLiabilities": { "avantos_type": "short-text", "type": "string", "title": "Guarantor Total Liabilities", "format": "currency" },
+          "existingDebtService": { "avantos_type": "short-text", "type": "string", "title": "Existing Debt Service", "format": "currency" },
+          "proposedDebtService": { "avantos_type": "short-text", "type": "string", "title": "Proposed Debt Service", "format": "currency" },
+          "globalDscr": { "avantos_type": "short-text", "type": "string", "title": "Global DSCR", "format": "ratio" },
+          "minDscrCovenant": { "avantos_type": "short-text", "type": "string", "title": "Min DSCR Covenant", "format": "ratio" }
+        },
+        "required": ["entityLegalName", "proposedDebtService", "globalDscr"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_risk",
+      "name": "Risk Rating",
+      "description": "Composite risk rating; credit, DSCR, and tax inputs carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "ficoScore": { "avantos_type": "short-text", "type": "string", "title": "FICO Score", "format": "integer" },
+          "businessCreditScore": { "avantos_type": "short-text", "type": "string", "title": "Business Credit Score", "format": "integer" },
+          "globalDscr": { "avantos_type": "short-text", "type": "string", "title": "Global DSCR", "format": "ratio" },
+          "agiYear3": { "avantos_type": "short-text", "type": "string", "title": "AGI — Year 3", "format": "currency" },
+          "riskGrade": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Risk Grade",
+            "enum": ["1 — Pass", "2 — Pass", "3 — Pass", "4 — Pass/Watch", "5 — Special Mention", "6 — Substandard", "7 — Doubtful", "8 — Loss"]
+          },
+          "pdEstimate": { "avantos_type": "short-text", "type": "string", "title": "PD Estimate", "format": "percent" },
+          "lgdEstimate": { "avantos_type": "short-text", "type": "string", "title": "LGD Estimate", "format": "percent" },
+          "rationale": { "avantos_type": "multi-line-text", "type": "string", "title": "Rationale" }
+        },
+        "required": ["borrowerLegalName", "entityLegalName", "riskGrade", "pdEstimate", "rationale"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_terms",
+      "name": "Loan Terms",
+      "description": "Proposed structure, pricing, and covenants; risk and appraisal carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "riskGrade": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Risk Grade",
+            "enum": ["1 — Pass", "2 — Pass", "3 — Pass", "4 — Pass/Watch", "5 — Special Mention", "6 — Substandard", "7 — Doubtful", "8 — Loss"]
+          },
+          "pdEstimate": { "avantos_type": "short-text", "type": "string", "title": "PD Estimate", "format": "percent" },
+          "appraisedValue": { "avantos_type": "short-text", "type": "string", "title": "Appraised Value", "format": "currency" },
+          "collateralType": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Collateral Type",
+            "enum": ["Commercial Real Estate", "Equipment", "Accounts Receivable", "Inventory", "Vehicles", "Securities", "Blanket Lien"]
+          },
+          "loanAmount": { "avantos_type": "short-text", "type": "string", "title": "Loan Amount", "format": "currency" },
+          "termMonths": { "avantos_type": "short-text", "type": "string", "title": "Term (months)", "format": "integer" },
+          "interestRate": { "avantos_type": "short-text", "type": "string", "title": "Interest Rate", "format": "percent" },
+          "amortization": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Amortization",
+            "enum": ["Fully Amortizing", "Interest-Only", "Balloon", "Bullet"]
+          },
+          "covenants": { "avantos_type": "multi-line-text", "type": "string", "title": "Financial Covenants" }
+        },
+        "required": ["borrowerLegalName", "entityLegalName", "loanAmount", "termMonths", "interestRate"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_memo",
+      "name": "Credit Memo",
+      "description": "Underwriter narrative summarizing the package for committee; terms, UCC, and insurance carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "loanAmount": { "avantos_type": "short-text", "type": "string", "title": "Loan Amount", "format": "currency" },
+          "termMonths": { "avantos_type": "short-text", "type": "string", "title": "Term (months)", "format": "integer" },
+          "interestRate": { "avantos_type": "short-text", "type": "string", "title": "Interest Rate", "format": "percent" },
+          "riskGrade": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Risk Grade",
+            "enum": ["1 — Pass", "2 — Pass", "3 — Pass", "4 — Pass/Watch", "5 — Special Mention", "6 — Substandard", "7 — Doubtful", "8 — Loss"]
+          },
+          "lienPosition": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Lien Position",
+            "enum": ["1st", "2nd", "3rd", "Subordinate", "None"]
+          },
+          "coverageAmount": { "avantos_type": "short-text", "type": "string", "title": "Coverage Amount", "format": "currency" },
+          "summary": { "avantos_type": "multi-line-text", "type": "string", "title": "Summary" },
+          "strengths": { "avantos_type": "multi-line-text", "type": "string", "title": "Strengths" },
+          "weaknesses": { "avantos_type": "multi-line-text", "type": "string", "title": "Weaknesses" },
+          "recommendation": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Recommendation",
+            "enum": ["Approve", "Approve with Conditions", "Decline", "Counter-Offer"]
+          }
+        },
+        "required": ["borrowerLegalName", "entityLegalName", "summary", "recommendation"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_approval",
+      "name": "Approval Decision",
+      "description": "Committee outcome and conditions; memo content carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "loanAmount": { "avantos_type": "short-text", "type": "string", "title": "Loan Amount", "format": "currency" },
+          "recommendation": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Recommendation",
+            "enum": ["Approve", "Approve with Conditions", "Decline", "Counter-Offer"]
+          },
+          "summary": { "avantos_type": "multi-line-text", "type": "string", "title": "Summary" },
+          "decision": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Decision",
+            "enum": ["Approved", "Approved with Conditions", "Declined", "Withdrawn"]
+          },
+          "approver": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Approver",
+            "enum": null
+          },
+          "decisionDate": { "avantos_type": "short-text", "type": "string", "title": "Decision Date", "format": "date" },
+          "conditions": { "avantos_type": "multi-line-text", "type": "string", "title": "Conditions" }
+        },
+        "required": ["borrowerLegalName", "decision", "approver", "decisionDate"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_closing",
+      "name": "Closing Package",
+      "description": "Note, security agreement, and ancillary closing documents; identity and approved amount carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "noteAmount": { "avantos_type": "short-text", "type": "string", "title": "Note Amount", "format": "currency" },
+          "decision": {
+            "avantos_type": "object-enum",
+            "type": "string",
+            "title": "Approved Decision",
+            "enum": ["Approved", "Approved with Conditions", "Declined", "Withdrawn"]
+          },
+          "decisionDate": { "avantos_type": "short-text", "type": "string", "title": "Approval Date", "format": "date" },
+          "approvalConditions": { "avantos_type": "multi-line-text", "type": "string", "title": "Approval Conditions" },
+          "closingDate": { "avantos_type": "short-text", "type": "string", "title": "Closing Date", "format": "date" },
+          "documentsExecuted": {
+            "avantos_type": "checkbox-group",
+            "type": "array",
+            "title": "Documents Executed",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["Promissory Note", "Security Agreement", "Personal Guaranty", "UCC-1 Financing Statement", "Subordination Agreement", "Insurance Endorsement", "Resolution of Authority"]
+            }
+          },
+          "fundingConditions": { "avantos_type": "multi-line-text", "type": "string", "title": "Funding Conditions" }
+        },
+        "required": ["borrowerLegalName", "noteAmount", "closingDate", "documentsExecuted"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_loan_funding",
+      "name": "Funding & Booking",
+      "description": "Disbursement instructions and core banking booking; closing values and approver carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "borrowerLegalName": { "avantos_type": "short-text", "type": "string", "title": "Borrower Legal Name" },
+          "entityLegalName": { "avantos_type": "short-text", "type": "string", "title": "Entity Legal Name" },
+          "noteAmount": { "avantos_type": "short-text", "type": "string", "title": "Note Amount", "format": "currency" },
+          "closingDate": { "avantos_type": "short-text", "type": "string", "title": "Closing Date", "format": "date" },
+          "fundingDate": { "avantos_type": "short-text", "type": "string", "title": "Funding Date", "format": "date" },
+          "wireReference": { "avantos_type": "short-text", "type": "string", "title": "Wire Reference", "format": "identifier" },
+          "glAccount": { "avantos_type": "short-text", "type": "string", "title": "GL Account", "format": "identifier" },
+          "bookedBy": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Booked By",
+            "enum": null
+          }
+        },
+        "required": ["borrowerLegalName", "noteAmount", "fundingDate", "wireReference", "glAccount"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    }
+  ],
+  "branches": [],
+  "triggers": []
+}

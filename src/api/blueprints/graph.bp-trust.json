@@ -1,0 +1,406 @@
+{
+  "id": "bp-trust",
+  "tenant_id": "tenant-1",
+  "name": "Estate Trust Setup (reusable forms)",
+  "description": "Establish a revocable living trust: profile, grantor identity, trustee, and three rounds of beneficiary designation (primary, contingent, remainder).",
+  "category": "Estate Planning",
+  "branches": [],
+  "triggers": [],
+  "nodes": [
+    {
+      "id": "trust-profile",
+      "type": "form",
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_trust-profile",
+        "component_key": "trust-profile",
+        "component_type": "form",
+        "component_id": "f-trust-profile",
+        "name": "Trust Profile",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "grantor",
+      "type": "form",
+      "position": {
+        "x": 220,
+        "y": 100
+      },
+      "data": {
+        "id": "bp_c_grantor",
+        "component_key": "grantor",
+        "component_type": "form",
+        "component_id": "f-trust-grantor",
+        "name": "Grantor Identification",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "trustee",
+      "type": "form",
+      "position": {
+        "x": 220,
+        "y": 300
+      },
+      "data": {
+        "id": "bp_c_trustee",
+        "component_key": "trustee",
+        "component_type": "form",
+        "component_id": "f-trust-trustee",
+        "name": "Trustee Selection",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "beneficiary-primary",
+      "type": "form",
+      "position": {
+        "x": 460,
+        "y": 60
+      },
+      "data": {
+        "id": "bp_c_beneficiary-primary",
+        "component_key": "beneficiary-primary",
+        "component_type": "form",
+        "component_id": "f-trust-beneficiary",
+        "name": "Primary Beneficiary",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "notifyEmail": {
+            "sourceId": "global",
+            "groupId": "currentUser",
+            "optionId": "email"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "beneficiary-contingent",
+      "type": "form",
+      "position": {
+        "x": 460,
+        "y": 180
+      },
+      "data": {
+        "id": "bp_c_beneficiary-contingent",
+        "component_key": "beneficiary-contingent",
+        "component_type": "form",
+        "component_id": "f-trust-beneficiary",
+        "name": "Contingent Beneficiary",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "beneficiary-remainder",
+      "type": "form",
+      "position": {
+        "x": 460,
+        "y": 300
+      },
+      "data": {
+        "id": "bp_c_beneficiary-remainder",
+        "component_key": "beneficiary-remainder",
+        "component_type": "form",
+        "component_id": "f-trust-beneficiary",
+        "name": "Remainder Beneficiary",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "trust-profile",
+      "target": "grantor"
+    },
+    {
+      "source": "trust-profile",
+      "target": "trustee"
+    },
+    {
+      "source": "grantor",
+      "target": "beneficiary-primary"
+    },
+    {
+      "source": "grantor",
+      "target": "beneficiary-contingent"
+    },
+    {
+      "source": "grantor",
+      "target": "beneficiary-remainder"
+    }
+  ],
+  "forms": [
+    {
+      "id": "f-trust-profile",
+      "name": "Trust Profile",
+      "description": "Trust name, type, and governing state.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "trustName": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Trust Name"
+          },
+          "trustType": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Trust Type"
+          },
+          "governingState": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Governing State"
+          }
+        },
+        "required": [
+          "trustName",
+          "trustType"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/trustName",
+            "label": "Trust Name"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/trustType",
+            "label": "Trust Type"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/governingState",
+            "label": "Governing State"
+          }
+        ]
+      }
+    },
+    {
+      "id": "f-trust-grantor",
+      "name": "Grantor Identification",
+      "description": "Identity of the person establishing the trust.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "legalName": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Legal Name"
+          },
+          "ssn": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "SSN"
+          },
+          "dob": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Date of Birth",
+            "format": "date"
+          },
+          "mailingAddress": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Mailing Address"
+          }
+        },
+        "required": [
+          "legalName",
+          "ssn",
+          "dob"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/legalName",
+            "label": "Legal Name"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/ssn",
+            "label": "SSN"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/dob",
+            "label": "Date of Birth"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/mailingAddress",
+            "label": "Mailing Address"
+          }
+        ]
+      }
+    },
+    {
+      "id": "f-trust-trustee",
+      "name": "Trustee Selection",
+      "description": "Person or institution serving as trustee.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "trusteeLegalName": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Trustee Legal Name"
+          },
+          "trusteeRelationship": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Relationship to Grantor"
+          },
+          "trusteeContactEmail": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Trustee Email"
+          }
+        },
+        "required": [
+          "trusteeLegalName"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/trusteeLegalName",
+            "label": "Trustee Legal Name"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/trusteeRelationship",
+            "label": "Relationship to Grantor"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/trusteeContactEmail",
+            "label": "Trustee Email"
+          }
+        ]
+      }
+    },
+    {
+      "id": "f-trust-beneficiary",
+      "name": "Beneficiary Designation",
+      "description": "Reusable: primary, contingent, and remainder beneficiaries each render this form. Global mappings here fan out to every instance.",
+      "is_reusable": true,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "beneficiaryLegalName": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Beneficiary Legal Name"
+          },
+          "relationship": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Relationship to Grantor"
+          },
+          "sharePercent": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Share (%)"
+          },
+          "notifyEmail": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Notification Email"
+          }
+        },
+        "required": [
+          "beneficiaryLegalName",
+          "sharePercent"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/beneficiaryLegalName",
+            "label": "Beneficiary Legal Name"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/relationship",
+            "label": "Relationship to Grantor"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/sharePercent",
+            "label": "Share (%)"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/notifyEmail",
+            "label": "Notification Email"
+          }
+        ]
+      }
+    }
+  ]
+}

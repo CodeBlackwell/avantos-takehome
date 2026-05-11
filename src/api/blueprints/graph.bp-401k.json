@@ -1,0 +1,420 @@
+{
+  "id": "bp-401k",
+  "tenant_id": "tenant-1",
+  "name": "401(k) Plan Setup (endpoint-backed fields)",
+  "description": "Configure an employer-sponsored retirement plan: sponsor info, plan type, custodian, fund lineup, and plan document. Three forms pull their option lists from remote endpoints (dynamic_field_config).",
+  "category": "Retirement",
+  "branches": [],
+  "triggers": [],
+  "nodes": [
+    {
+      "id": "sponsor",
+      "type": "form",
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_sponsor",
+        "component_key": "sponsor",
+        "component_type": "form",
+        "component_id": "f-401k-sponsor",
+        "name": "Plan Sponsor Info",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "primaryContactEmail": {
+            "sourceId": "global",
+            "groupId": "currentUser",
+            "optionId": "email"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "plan-type",
+      "type": "form",
+      "position": {
+        "x": 220,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_plan-type",
+        "component_key": "plan-type",
+        "component_type": "form",
+        "component_id": "f-401k-plan-type",
+        "name": "Plan Type Selection",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "planType": {
+            "sourceId": "endpoint",
+            "groupId": "f-401k-plan-type::planType::te_plan_types",
+            "optionId": "safe-harbor"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "custodian",
+      "type": "form",
+      "position": {
+        "x": 440,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_custodian",
+        "component_key": "custodian",
+        "component_type": "form",
+        "component_id": "f-401k-custodian",
+        "name": "Custodian Selection",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "custodian": {
+            "sourceId": "endpoint",
+            "groupId": "f-401k-custodian::custodian::te_custodians",
+            "optionId": "fidelity"
+          },
+          "recordkeeperContactEmail": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "sponsor",
+            "optionId": "primaryContactEmail"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "lineup",
+      "type": "form",
+      "position": {
+        "x": 660,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_lineup",
+        "component_key": "lineup",
+        "component_type": "form",
+        "component_id": "f-401k-lineup",
+        "name": "Investment Lineup",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "defaultFund": {
+            "sourceId": "endpoint",
+            "groupId": "f-401k-lineup::defaultFund::te_funds",
+            "optionId": "tdf-2055"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "doc",
+      "type": "form",
+      "position": {
+        "x": 880,
+        "y": 200
+      },
+      "data": {
+        "id": "bp_c_doc",
+        "component_key": "doc",
+        "component_type": "form",
+        "component_id": "f-401k-doc",
+        "name": "Plan Document",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {
+          "documentRef": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "sponsor",
+            "optionId": "sponsorName"
+          },
+          "notifyEmail": {
+            "sourceId": "global",
+            "groupId": "currentUser",
+            "optionId": "email"
+          }
+        },
+        "sla_duration": {
+          "number": 0,
+          "unit": "minutes"
+        },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "sponsor",
+      "target": "plan-type"
+    },
+    {
+      "source": "plan-type",
+      "target": "custodian"
+    },
+    {
+      "source": "custodian",
+      "target": "lineup"
+    },
+    {
+      "source": "lineup",
+      "target": "doc"
+    }
+  ],
+  "forms": [
+    {
+      "id": "f-401k-sponsor",
+      "name": "Plan Sponsor Info",
+      "description": "Employer establishing the plan.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "sponsorName": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Sponsor Legal Name"
+          },
+          "ein": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "EIN"
+          },
+          "primaryContactEmail": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Primary Contact Email"
+          }
+        },
+        "required": [
+          "sponsorName",
+          "ein"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/sponsorName",
+            "label": "Sponsor Legal Name"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/ein",
+            "label": "EIN"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/primaryContactEmail",
+            "label": "Primary Contact Email"
+          }
+        ]
+      }
+    },
+    {
+      "id": "f-401k-plan-type",
+      "name": "Plan Type Selection",
+      "description": "Pick a plan type. Options come from te_plan_types.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "planType": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Plan Type"
+          },
+          "effectiveDate": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Effective Date",
+            "format": "date"
+          }
+        },
+        "required": [
+          "planType",
+          "effectiveDate"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/planType",
+            "label": "Plan Type"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/effectiveDate",
+            "label": "Effective Date"
+          }
+        ]
+      },
+      "dynamic_field_config": {
+        "planType": {
+          "selector_field": "title",
+          "payload_fields": {},
+          "endpoint_id": "te_plan_types"
+        }
+      }
+    },
+    {
+      "id": "f-401k-custodian",
+      "name": "Custodian Selection",
+      "description": "Pick a custodian. Options come from te_custodians.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "custodian": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Custodian"
+          },
+          "recordkeeperContactEmail": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Recordkeeper Contact"
+          }
+        },
+        "required": [
+          "custodian"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/custodian",
+            "label": "Custodian"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/recordkeeperContactEmail",
+            "label": "Recordkeeper Contact"
+          }
+        ]
+      },
+      "dynamic_field_config": {
+        "custodian": {
+          "selector_field": "title",
+          "payload_fields": {},
+          "endpoint_id": "te_custodians"
+        }
+      }
+    },
+    {
+      "id": "f-401k-lineup",
+      "name": "Investment Lineup",
+      "description": "Pick the default fund. Options come from te_funds.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "defaultFund": {
+            "avantos_type": "object-enum",
+            "type": "object",
+            "title": "Default Fund"
+          },
+          "defaultDeferralPct": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Default Deferral (%)"
+          }
+        },
+        "required": [
+          "defaultFund"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/defaultFund",
+            "label": "Default Fund"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/defaultDeferralPct",
+            "label": "Default Deferral (%)"
+          }
+        ]
+      },
+      "dynamic_field_config": {
+        "defaultFund": {
+          "selector_field": "title",
+          "payload_fields": {},
+          "endpoint_id": "te_funds"
+        }
+      }
+    },
+    {
+      "id": "f-401k-doc",
+      "name": "Plan Document",
+      "description": "Final plan document; reads forward from every upstream form.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "documentRef": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Document Reference"
+          },
+          "notifyEmail": {
+            "avantos_type": "short-text",
+            "type": "string",
+            "title": "Notification Email"
+          }
+        },
+        "required": [
+          "documentRef"
+        ]
+      },
+      "ui_schema": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/documentRef",
+            "label": "Document Reference"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/notifyEmail",
+            "label": "Notification Email"
+          }
+        ]
+      }
+    }
+  ]
+}

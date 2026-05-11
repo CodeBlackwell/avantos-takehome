@@ -1,0 +1,8 @@
+{
+  "label": "Action Properties",
+  "fields": {
+    "id":    { "value": "u_42",            "type": "short-text" },
+    "email": { "value": "ada@example.com", "type": "short-text" },
+    "name":  { "value": "Ada Lovelace",    "type": "short-text" }
+  }
+}

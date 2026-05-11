@@ -1,0 +1,231 @@
+{
+  "id": "bp-refresh",
+  "tenant_id": "1",
+  "name": "Annual KYC / IPS Refresh (linear chain)",
+  "description": "Periodic review and reaffirmation of an existing client relationship. Identity carries forward; risk flows into IPS; allocation flows into rebalance.",
+  "category": "Servicing",
+  "nodes": [
+    {
+      "id": "form-refresh-update",
+      "type": "form",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "id": "bp_c_refresh_update",
+        "component_key": "form-refresh-update",
+        "component_type": "form",
+        "component_id": "f_refresh_update",
+        "name": "Update Client Info",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-refresh-risk",
+      "type": "form",
+      "position": { "x": 240, "y": 0 },
+      "data": {
+        "id": "bp_c_refresh_risk",
+        "component_key": "form-refresh-risk",
+        "component_type": "form",
+        "component_id": "f_refresh_risk",
+        "name": "Refresh Risk Profile",
+        "prerequisites": ["form-refresh-update"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-update",
+            "optionId": "clientLegalName"
+          },
+          "clientEmail": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-update",
+            "optionId": "clientEmail"
+          },
+          "currentNetWorthRange": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-update",
+            "optionId": "netWorthRange"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-refresh-ips",
+      "type": "form",
+      "position": { "x": 480, "y": 0 },
+      "data": {
+        "id": "bp_c_refresh_ips",
+        "component_key": "form-refresh-ips",
+        "component_type": "form",
+        "component_id": "f_refresh_ips",
+        "name": "IPS Reaffirmation",
+        "prerequisites": ["form-refresh-risk"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-refresh-update",
+            "optionId": "clientLegalName"
+          },
+          "updatedRiskScore": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-risk",
+            "optionId": "updatedRiskScore"
+          },
+          "updatedTimeHorizon": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-risk",
+            "optionId": "updatedTimeHorizon"
+          },
+          "materialChanges": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-risk",
+            "optionId": "materialChanges"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-refresh-rebalance",
+      "type": "form",
+      "position": { "x": 720, "y": 0 },
+      "data": {
+        "id": "bp_c_refresh_rebalance",
+        "component_key": "form-refresh-rebalance",
+        "component_type": "form",
+        "component_id": "f_refresh_rebalance",
+        "name": "Rebalance Authorization",
+        "prerequisites": ["form-refresh-ips"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-refresh-update",
+            "optionId": "clientLegalName"
+          },
+          "targetAllocation": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-ips",
+            "optionId": "reaffirmAllocation"
+          },
+          "reviewedRestrictions": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-refresh-ips",
+            "optionId": "reviewedRestrictions"
+          },
+          "updatedRiskScore": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-refresh-risk",
+            "optionId": "updatedRiskScore"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    { "source": "form-refresh-update", "target": "form-refresh-risk" },
+    { "source": "form-refresh-risk", "target": "form-refresh-ips" },
+    { "source": "form-refresh-ips", "target": "form-refresh-rebalance" }
+  ],
+  "forms": [
+    {
+      "id": "f_refresh_update",
+      "name": "Update Client Info",
+      "description": "Capture current identity-of-record and material changes since the last review.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientEmail": { "avantos_type": "short-text", "type": "string", "title": "Client Email", "format": "email" },
+          "currentAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Current Address" },
+          "maritalStatusChange": { "avantos_type": "short-text", "type": "string", "title": "Marital Status Change" },
+          "addressChange": { "avantos_type": "multi-line-text", "type": "string", "title": "Address Change" },
+          "employmentChange": { "avantos_type": "short-text", "type": "string", "title": "Employment Change" },
+          "netWorthRange": { "avantos_type": "short-text", "type": "string", "title": "Net Worth Range" }
+        },
+        "required": ["clientLegalName"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_refresh_risk",
+      "name": "Refresh Risk Profile",
+      "description": "Updated risk tolerance and investment horizon; client identity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientEmail": { "avantos_type": "short-text", "type": "string", "title": "Client Email", "format": "email" },
+          "currentNetWorthRange": { "avantos_type": "short-text", "type": "string", "title": "Current Net Worth Range" },
+          "updatedTimeHorizon": { "avantos_type": "short-text", "type": "string", "title": "Updated Time Horizon" },
+          "updatedRiskScore": { "avantos_type": "short-text", "type": "string", "title": "Updated Risk Score" },
+          "materialChanges": { "avantos_type": "multi-line-text", "type": "string", "title": "Material Changes" }
+        },
+        "required": ["clientLegalName", "updatedRiskScore"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_refresh_ips",
+      "name": "IPS Reaffirmation",
+      "description": "Reaffirm or amend the existing investment policy statement; risk inputs carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "updatedRiskScore": { "avantos_type": "short-text", "type": "string", "title": "Updated Risk Score" },
+          "updatedTimeHorizon": { "avantos_type": "short-text", "type": "string", "title": "Updated Time Horizon" },
+          "materialChanges": { "avantos_type": "multi-line-text", "type": "string", "title": "Material Changes" },
+          "reaffirmAllocation": { "avantos_type": "short-text", "type": "string", "title": "Reaffirm Allocation" },
+          "reviewedRestrictions": { "avantos_type": "multi-line-text", "type": "string", "title": "Reviewed Restrictions" },
+          "advisorNotes": { "avantos_type": "multi-line-text", "type": "string", "title": "Advisor Notes" }
+        },
+        "required": ["clientLegalName", "reaffirmAllocation"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_refresh_rebalance",
+      "name": "Rebalance Authorization",
+      "description": "Authorize portfolio rebalance; client identity, target allocation, and risk score carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "targetAllocation": { "avantos_type": "short-text", "type": "string", "title": "Target Allocation" },
+          "reviewedRestrictions": { "avantos_type": "multi-line-text", "type": "string", "title": "Reviewed Restrictions" },
+          "updatedRiskScore": { "avantos_type": "short-text", "type": "string", "title": "Updated Risk Score" },
+          "rebalanceMode": { "avantos_type": "short-text", "type": "string", "title": "Rebalance Mode" },
+          "taxLossHarvest": { "avantos_type": "short-text", "type": "string", "title": "Tax Loss Harvest" },
+          "signatureDate": { "avantos_type": "short-text", "type": "string", "title": "Signature Date", "format": "date" }
+        },
+        "required": ["clientLegalName", "rebalanceMode", "signatureDate"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    }
+  ],
+  "branches": [],
+  "triggers": []
+}

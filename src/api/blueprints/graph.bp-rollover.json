@@ -1,0 +1,328 @@
+{
+  "id": "bp-rollover",
+  "tenant_id": "1",
+  "name": "IRA Rollover (diamond fan-out/fan-in)",
+  "description": "Move retirement assets from a prior plan into a new IRA: intake, prior-plan details, new IRA application, ACAT transfer, tax withholding.",
+  "category": "Life Event",
+  "nodes": [
+    {
+      "id": "form-rollover-intake",
+      "type": "form",
+      "position": { "x": 0, "y": 200 },
+      "data": {
+        "id": "bp_c_rollover_intake",
+        "component_key": "form-rollover-intake",
+        "component_type": "form",
+        "component_id": "f_rollover_intake",
+        "name": "Rollover Intake",
+        "prerequisites": [],
+        "permitted_roles": [],
+        "input_mapping": {},
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-rollover-prior",
+      "type": "form",
+      "position": { "x": 240, "y": 80 },
+      "data": {
+        "id": "bp_c_rollover_prior",
+        "component_key": "form-rollover-prior",
+        "component_type": "form",
+        "component_id": "f_rollover_prior",
+        "name": "Prior Plan Details",
+        "prerequisites": ["form-rollover-intake"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "accountHolderLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientLegalName"
+          },
+          "accountHolderSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientSsn"
+          },
+          "estimatedTransferAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "estimatedAmount"
+          },
+          "priorPlanType": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "priorPlanType"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-rollover-newira",
+      "type": "form",
+      "position": { "x": 240, "y": 320 },
+      "data": {
+        "id": "bp_c_rollover_newira",
+        "component_key": "form-rollover-newira",
+        "component_type": "form",
+        "component_id": "f_rollover_newira",
+        "name": "New IRA Application",
+        "prerequisites": ["form-rollover-intake"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "applicantLegalName": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientLegalName"
+          },
+          "applicantSsn": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientSsn"
+          },
+          "applicantEmail": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientEmail"
+          },
+          "applicantDob": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientDob"
+          },
+          "applicantAddress": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientAddress"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-rollover-acat",
+      "type": "form",
+      "position": { "x": 480, "y": 200 },
+      "data": {
+        "id": "bp_c_rollover_acat",
+        "component_key": "form-rollover-acat",
+        "component_type": "form",
+        "component_id": "f_rollover_acat",
+        "name": "ACAT Transfer Authorization",
+        "prerequisites": ["form-rollover-prior", "form-rollover-newira"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientLegalName"
+          },
+          "clientSsn": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientSsn"
+          },
+          "deliveringFirm": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-prior",
+            "optionId": "priorCustodian"
+          },
+          "deliveringAccountNumber": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-prior",
+            "optionId": "priorAccountNumber"
+          },
+          "receivingFirm": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-newira",
+            "optionId": "receivingCustodian"
+          },
+          "receivingAccountNumber": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-newira",
+            "optionId": "newAccountNumber"
+          },
+          "estimatedTransferAmount": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "estimatedAmount"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    },
+    {
+      "id": "form-rollover-tax",
+      "type": "form",
+      "position": { "x": 720, "y": 200 },
+      "data": {
+        "id": "bp_c_rollover_tax",
+        "component_key": "form-rollover-tax",
+        "component_type": "form",
+        "component_id": "f_rollover_tax",
+        "name": "Tax Withholding Election",
+        "prerequisites": ["form-rollover-acat"],
+        "permitted_roles": [],
+        "input_mapping": {
+          "clientLegalName": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientLegalName"
+          },
+          "clientSsn": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "clientSsn"
+          },
+          "distributionAmount": {
+            "sourceId": "form-fields-direct",
+            "groupId": "form-rollover-acat",
+            "optionId": "estimatedTransferAmount"
+          },
+          "rolloverType": {
+            "sourceId": "form-fields-transitive",
+            "groupId": "form-rollover-intake",
+            "optionId": "rolloverType"
+          }
+        },
+        "sla_duration": { "number": 0, "unit": "minutes" },
+        "approval_required": false,
+        "approval_roles": []
+      }
+    }
+  ],
+  "edges": [
+    { "source": "form-rollover-intake", "target": "form-rollover-prior" },
+    { "source": "form-rollover-intake", "target": "form-rollover-newira" },
+    { "source": "form-rollover-prior", "target": "form-rollover-acat" },
+    { "source": "form-rollover-newira", "target": "form-rollover-acat" },
+    { "source": "form-rollover-acat", "target": "form-rollover-tax" }
+  ],
+  "forms": [
+    {
+      "id": "f_rollover_intake",
+      "name": "Rollover Intake",
+      "description": "Initial rollover request: client identity, prior plan kind, estimated amount.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientSsn": { "avantos_type": "short-text", "type": "string", "title": "Client SSN" },
+          "clientDob": { "avantos_type": "short-text", "type": "string", "title": "Client DOB", "format": "date" },
+          "clientEmail": { "avantos_type": "short-text", "type": "string", "title": "Client Email", "format": "email" },
+          "clientPhone": { "avantos_type": "short-text", "type": "string", "title": "Client Phone", "format": "phone" },
+          "clientAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Client Address" },
+          "rolloverType": { "avantos_type": "short-text", "type": "string", "title": "Rollover Type" },
+          "priorPlanType": { "avantos_type": "short-text", "type": "string", "title": "Prior Plan Type" },
+          "estimatedAmount": { "avantos_type": "short-text", "type": "string", "title": "Estimated Amount", "format": "currency" },
+          "urgency": { "avantos_type": "short-text", "type": "string", "title": "Urgency" }
+        },
+        "required": ["clientLegalName", "clientSsn", "rolloverType", "priorPlanType"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_rollover_prior",
+      "name": "Prior Plan Details",
+      "description": "Custodian and account at the delivering firm; account holder identity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "accountHolderLegalName": { "avantos_type": "short-text", "type": "string", "title": "Account Holder Legal Name" },
+          "accountHolderSsn": { "avantos_type": "short-text", "type": "string", "title": "Account Holder SSN" },
+          "estimatedTransferAmount": { "avantos_type": "short-text", "type": "string", "title": "Estimated Transfer Amount", "format": "currency" },
+          "priorPlanType": { "avantos_type": "short-text", "type": "string", "title": "Prior Plan Type" },
+          "priorCustodian": { "avantos_type": "short-text", "type": "string", "title": "Prior Custodian" },
+          "priorAccountNumber": { "avantos_type": "short-text", "type": "string", "title": "Prior Account Number" },
+          "priorPlanAdmin": { "avantos_type": "short-text", "type": "string", "title": "Prior Plan Administrator" },
+          "contactPhone": { "avantos_type": "short-text", "type": "string", "title": "Contact Phone", "format": "phone" }
+        },
+        "required": ["accountHolderLegalName", "priorCustodian", "priorAccountNumber"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_rollover_newira",
+      "name": "New IRA Application",
+      "description": "Receiving IRA: type, beneficiaries, account number; applicant identity carries forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "applicantLegalName": { "avantos_type": "short-text", "type": "string", "title": "Applicant Legal Name" },
+          "applicantSsn": { "avantos_type": "short-text", "type": "string", "title": "Applicant SSN" },
+          "applicantDob": { "avantos_type": "short-text", "type": "string", "title": "Applicant DOB", "format": "date" },
+          "applicantEmail": { "avantos_type": "short-text", "type": "string", "title": "Applicant Email", "format": "email" },
+          "applicantAddress": { "avantos_type": "multi-line-text", "type": "string", "title": "Applicant Address" },
+          "iraType": { "avantos_type": "short-text", "type": "string", "title": "IRA Type" },
+          "beneficiaryPrimary": { "avantos_type": "short-text", "type": "string", "title": "Primary Beneficiary" },
+          "beneficiaryContingent": { "avantos_type": "short-text", "type": "string", "title": "Contingent Beneficiary" },
+          "receivingCustodian": { "avantos_type": "short-text", "type": "string", "title": "Receiving Custodian" },
+          "newAccountNumber": { "avantos_type": "short-text", "type": "string", "title": "New Account Number" }
+        },
+        "required": ["applicantLegalName", "iraType", "beneficiaryPrimary"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_rollover_acat",
+      "name": "ACAT Transfer Authorization",
+      "description": "Authorize transfer; pulls identity from intake (transitive) and account info from both parents.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientSsn": { "avantos_type": "short-text", "type": "string", "title": "Client SSN" },
+          "deliveringFirm": { "avantos_type": "short-text", "type": "string", "title": "Delivering Firm" },
+          "deliveringAccountNumber": { "avantos_type": "short-text", "type": "string", "title": "Delivering Account Number" },
+          "receivingFirm": { "avantos_type": "short-text", "type": "string", "title": "Receiving Firm" },
+          "receivingAccountNumber": { "avantos_type": "short-text", "type": "string", "title": "Receiving Account Number" },
+          "estimatedTransferAmount": { "avantos_type": "short-text", "type": "string", "title": "Estimated Transfer Amount", "format": "currency" },
+          "transferType": { "avantos_type": "short-text", "type": "string", "title": "Transfer Type" },
+          "assetsList": { "avantos_type": "multi-line-text", "type": "string", "title": "Assets List" }
+        },
+        "required": ["deliveringFirm", "receivingAccountNumber", "transferType"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    },
+    {
+      "id": "f_rollover_tax",
+      "name": "Tax Withholding Election",
+      "description": "Federal and state withholding; client identity and amount carry forward.",
+      "is_reusable": false,
+      "field_schema": {
+        "type": "object",
+        "properties": {
+          "clientLegalName": { "avantos_type": "short-text", "type": "string", "title": "Client Legal Name" },
+          "clientSsn": { "avantos_type": "short-text", "type": "string", "title": "Client SSN" },
+          "distributionAmount": { "avantos_type": "short-text", "type": "string", "title": "Distribution Amount", "format": "currency" },
+          "rolloverType": { "avantos_type": "short-text", "type": "string", "title": "Rollover Type" },
+          "federalWithholdingPct": { "avantos_type": "short-text", "type": "string", "title": "Federal Withholding %", "format": "percent" },
+          "stateWithholdingPct": { "avantos_type": "short-text", "type": "string", "title": "State Withholding %", "format": "percent" },
+          "electionAcknowledged": { "avantos_type": "short-text", "type": "string", "title": "Election Acknowledged" }
+        },
+        "required": ["federalWithholdingPct", "electionAcknowledged"]
+      },
+      "ui_schema": { "type": "VerticalLayout", "elements": [] },
+      "dynamic_field_config": {}
+    }
+  ],
+  "branches": [],
+  "triggers": []
+}

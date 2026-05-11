@@ -1,0 +1,8 @@
+{
+  "label": "Client Organisation Properties",
+  "fields": {
+    "id":   { "value": "org_1",                    "type": "short-text" },
+    "name": { "value": "Analytical Engines, Ltd.", "type": "short-text" },
+    "plan": { "value": "enterprise",               "type": "short-text" }
+  }
+}

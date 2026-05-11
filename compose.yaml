@@ -1,0 +1,25 @@
+# `docker compose up` brings up both halves of the stack:
+#   - server: the upstream mock backend, run from the sibling
+#     ../frontendchallengeserver checkout via a bind mount (zero-dependency
+#     Node script, so we don't need a Dockerfile for it).
+#   - web:    this repo, built via Dockerfile, served by nginx on :8080.
+#
+# nginx.conf proxies /api/ to http://server:3000, which Docker's internal DNS
+# resolves to the `server` service below.
+
+services:
+  server:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ../frontendchallengeserver:/app:ro
+    command: node index.js
+    expose:
+      - "3000"
+
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - server

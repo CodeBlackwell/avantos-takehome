@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "fidelity", "title": "Fidelity" },
+    { "id": "vanguard", "title": "Vanguard" },
+    { "id": "schwab", "title": "Charles Schwab" }
+  ]
+}

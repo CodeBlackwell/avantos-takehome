@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "trad-401k", "title": "Traditional 401(k)" },
+    { "id": "safe-harbor", "title": "Safe Harbor 401(k)" },
+    { "id": "solo-401k", "title": "Solo 401(k)" }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "te3-opt-tier-bronze", "title": "Bronze tier" },
+    { "id": "te3-opt-tier-silver", "title": "Silver tier" },
+    { "id": "te3-opt-tier-gold", "title": "Gold tier" }
+  ]
+}

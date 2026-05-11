@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "tdf-2055", "title": "Target Date 2055" },
+    { "id": "sp500", "title": "S&P 500 Index" },
+    { "id": "bond-ag", "title": "US Aggregate Bond" }
+  ]
+}
